@@ -3,8 +3,11 @@ import 'package:get/get.dart';
 
 import '../../home/screen/home_screen.dart';
 import '../sign_up/sign_up_screen.dart';
+import 'package:get_storage/get_storage.dart';
+
 
 class LoginScreen extends StatelessWidget {
+  final GetStorage storage = GetStorage(); // تهيئة GetStorage
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -15,7 +18,6 @@ class LoginScreen extends StatelessWidget {
       appBar: AppBar(title: Text('Login')),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
-
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -28,13 +30,12 @@ class LoginScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Email Field
                   TextFormField(
                     controller: _emailController,
                     decoration: InputDecoration(
                       labelText: 'Email',
-                      border: OutlineInputBorder(), // Adding border
-                      contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 16), // Adding padding
+                      border: OutlineInputBorder(),
+                      contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -47,14 +48,12 @@ class LoginScreen extends StatelessWidget {
                     },
                   ),
                   SizedBox(height: 16),
-
-                  // Password Field
                   TextFormField(
                     controller: _passwordController,
                     decoration: InputDecoration(
                       labelText: 'Password',
-                      border: OutlineInputBorder(), // Adding border
-                      contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 16), // Adding padding
+                      border: OutlineInputBorder(),
+                      contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                     ),
                     obscureText: true,
                     validator: (value) {
@@ -68,20 +67,16 @@ class LoginScreen extends StatelessWidget {
                     },
                   ),
                   SizedBox(height: 20),
-
-                  // Log In Button
                   ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        // Log in logic goes here
-                        Get.off(() => HomeScreen());
+                        storage.write('isLoggedIn', true); // حفظ حالة تسجيل الدخول
+                        Get.off(HomeScreen());
                       }
                     },
                     child: Text('Log In'),
                   ),
                   SizedBox(height: 10),
-
-                  // Link to Sign Up Screen
                   TextButton(
                     onPressed: () {
                       Get.to(() => SignUpScreen());
@@ -97,3 +92,4 @@ class LoginScreen extends StatelessWidget {
     );
   }
 }
+

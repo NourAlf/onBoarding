@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
-
-import '../../mainview.dart';
+import '../../auth/login/login_screen.dart';
 import '../controller/onboarding_controller.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+
+
 
 class OnboardingView extends StatelessWidget {
   final OnboardingController _controller = Get.put(OnboardingController());
-
   final List<Map<String, String>> onboardingData = [
     {'text': 'Welcome to our e-commerce app!', 'image': 'assets/onboard1.jpg'},
     {'text': 'Find the best products for you.', 'image': 'assets/onboard2.jpg'},
     {'text': 'Shop with confidence and ease.', 'image': 'assets/onboard3.jpg'}
   ];
+
+  final GetStorage storage = GetStorage(); // تهيئة GetStorage
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +25,7 @@ class OnboardingView extends StatelessWidget {
           children: [
             Expanded(
               child: PageView.builder(
-                controller: _controller.pageController, // ربط PageController
+                controller: _controller.pageController,
                 onPageChanged: (index) {
                   _controller.currentPage.value = index;
                 },
@@ -31,7 +34,7 @@ class OnboardingView extends StatelessWidget {
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Image.asset(onboardingData[index]['image']!, height: 250), // الصورة المتحركة
+                      Image.asset(onboardingData[index]['image']!, height: 250),
                       SizedBox(height: 20),
                       Text(
                         onboardingData[index]['text']!,
@@ -63,9 +66,10 @@ class OnboardingView extends StatelessWidget {
             Obx(() => ElevatedButton(
               onPressed: () {
                 if (_controller.currentPage.value == onboardingData.length - 1) {
-                  Get.off(MainView()); // الانتقال إلى الشاشة الرئيسية عند الانتهاء
+                  storage.write('onboardingCompleted', true); // حفظ حالة إكمال الـ Onboarding
+                  Get.off(LoginScreen()); // الانتقال إلى شاشة تسجيل الدخول
                 } else {
-                  _controller.nextPage(); // الانتقال إلى الصفحة التالية
+                  _controller.nextPage();
                 }
               },
               child: Text(_controller.currentPage.value == onboardingData.length - 1 ? 'Get Started' : 'Next'),
